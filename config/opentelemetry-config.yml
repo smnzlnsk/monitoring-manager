@@ -1,0 +1,35 @@
+receivers:
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver
+  hostmetrics:
+    collection_interval: 5s
+    root_path: /
+    scrapers:
+      cpu:
+      memory:
+      load:
+        cpu_average: true
+      network:
+      paging:
+      #processes:
+      #process:
+
+  hostmetrics/disk:
+    collection_interval: 60s
+    root_path: /
+    scrapers:
+      disk:
+      filesystem:
+
+exporters:
+  # metrics are for now forwarded to prometheus by the monitoring-manager
+  otlpgrpc:
+    endpoint: monitoring-manager:4317 # TODO: configure endpoint here
+
+  otlphttp:
+    endpoint: monitoring-manager:4318 # TODO: configure endpoint here
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics, hostmetrics/disk]
+      exporters: [logging, otlphttp] # can also use otlpgrpc here
