@@ -36,6 +36,9 @@ OSARCH ?= unknown
 
 # OpenTelemetry Collector Builder
 OCB=$(SCRIPTS_DIR)/ocb-$(OSARCH)
+COLLECTOR_BIN=manager
+COLLECTOR_BUILD_DIR=$(BUILD_DIR)/oakestra-monitoring-manager
+COLLECTOR_CONFIG_DIR=$(CONFIG_DIR)/opentelemetry-collector
 
 # Versioning
 VERSION=$(shell git describe --tags --always)
@@ -49,16 +52,27 @@ LDFLAGS=-ldflags "-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'ma
 BINARY_NAME ?= oakestra-monitoring-manager
 
 # Commands
-all: build-collector
+all: help
+
+help:
+	@echo "Available commands:"
+	@echo "build-go \t\t build go project in $(SRC_DIR)"
+	@echo "build-collector \t build opentelemetry collector"
+	@echo "test \t\t\t run tests"
+	@echo "fmt \t\t\t run gofmt"
+	@echo "vet \t\t\t run go vet"
+	@echo "mod-tidy \t\t run go mod tidy"
+	@echo "install \t\t install the binary in $(SRC_DIR)"
+	@echo "run-go \t\t\t run the binary in $(SRC_DIR)"
+	@echo "run-collector \t\t run the collector in $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)"
 
 build-go: setup
-	if 
 	@echo "Building binary..."
 	$(GOBUILD) $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) $(SRC_DIR)
 
 build-collector: setup
 	@echo "Building collector..."
-	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml
+	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN) --output-path=$(COLLECTOR_BUILD_DIR)
 
 clean: 
 	@echo "Cleaning..."
@@ -89,10 +103,14 @@ install:
 	@echo "Installing binary..."
 	$(GOCMD) install $(SRC_DIR)
 
-run: build
+run-go: build-go
 	@echo "Running binary..."
 	$(BUILD_DIR)/$(BINARY_NAME)
 
+run-collector: build-collector
+	@echo "Running collector..."
+	$(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
+
 # Phony targets
-.PHONY: all build-go build-collector clean test fmt vet mod-tidy install run 
+.PHONY: all build-go build-collector clean test fmt vet mod-tidy install run-go run-collector help
 
