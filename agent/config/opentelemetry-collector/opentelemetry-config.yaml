@@ -32,4 +32,4 @@ service:
   pipelines:
     metrics:
       receivers: [hostmetrics, hostmetrics/disk]
-      exporters: [logging, otlphttp] # can also use otlpgrpc here
+      exporters: [debug, otlphttp] # can also use otlpgrpc here
