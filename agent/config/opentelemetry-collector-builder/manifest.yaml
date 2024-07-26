@@ -1,9 +1,7 @@
 dist:
   module: github.com/smnzlnsk/monitoring-manager/agent
-  name: oakestra-monitoring-agent
   description: Master Thesis - Telemetry driven Network Optimisation in Edge-Cloud Orchestration Frameworks
   otelcol_version: 0.105.0
-  output_path: ./bin/oakestra-monitoring-agent
   version: 0.0.1
   go: /opt/homebrew/bin/go
 
