@@ -22,14 +22,11 @@ receivers:
 
 exporters:
   # metrics are for now forwarded to prometheus by the monitoring-manager
-  otlpgrpc:
+  otlp:
     endpoint: monitoring-manager:4317 # TODO: configure endpoint here
-
-  otlphttp:
-    endpoint: monitoring-manager:4318 # TODO: configure endpoint here
 
 service:
   pipelines:
     metrics:
       receivers: [hostmetrics, hostmetrics/disk]
-      exporters: [debug, otlphttp] # can also use otlpgrpc here
+      exporters: [debug, otlp] # can also use otlpgrpc here
