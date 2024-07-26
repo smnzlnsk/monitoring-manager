@@ -6,7 +6,7 @@ GOTEST=$(GOCMD) test
 GOFMT=$(GOCMD) fmt
 GOVET=$(GOCMD) vet
 GOMOD=$(GOCMD) mod
-BINARY_NAME=oakestra-monitoring-manager
+BINARY_NAME=oakestra-monitoring-agent
 PKG=./...
 
 # Directories
@@ -46,10 +46,10 @@ DATE=$(shell date +%Y-%m-%dT%H:%M:%SZ)
 LDFLAGS=-ldflags "-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'main.Date=$(DATE)'"
 
 # Variables
-BINARY_NAME ?= oakestra-monitoring-manager
+BINARY_NAME ?= oakestra-monitoring-agent
 
 # Commands
-all: build-go
+all: build-collector
 
 build-go:
 	@echo "Building binary..."
