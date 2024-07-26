@@ -27,8 +27,8 @@ ifeq ($(OS), Darwin)
 endif
 
 ifeq ($(OS), Linux)
-	ifeq ($(ARCH), arm64)
-		OSARCH=linux-arm64
+	ifeq ($(ARCH), aarch64)
+		OSARCH=linux-aarch64
 	endif
 endif
 # default
