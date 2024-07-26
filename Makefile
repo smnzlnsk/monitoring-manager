@@ -54,6 +54,18 @@ BINARY_NAME ?= oakestra-monitoring-agent
 # Commands
 all: help
 
+help:
+	@echo "Available commands:"
+	@echo "build-go \t\t build go project in $(SRC_DIR)"
+	@echo "build-collector \t build opentelemetry collector"
+	@echo "test \t\t\t run tests"
+	@echo "fmt \t\t\t run gofmt"
+	@echo "vet \t\t\t run go vet"
+	@echo "mod-tidy \t\t run go mod tidy"
+	@echo "install \t\t install the binary in $(SRC_DIR)"
+	@echo "run-go \t\t\t run the binary in $(SRC_DIR)"
+	@echo "run-collector \t\t run the collector in $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)"
+
 build-go: setup
 	@echo "Building binary..."
 	$(GOBUILD) $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) $(SRC_DIR)
