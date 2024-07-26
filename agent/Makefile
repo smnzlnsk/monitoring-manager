@@ -60,7 +60,7 @@ build-go: setup
 
 build-collector: setup
 	@echo "Building collector..."
-	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN) --output_path=$(COLLECTOR_DIR)
+	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN) --output-path=$(COLLECTOR_BUILD_DIR)
 
 clean: 
 	@echo "Cleaning..."
