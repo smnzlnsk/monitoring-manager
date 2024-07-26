@@ -51,11 +51,12 @@ BINARY_NAME ?= oakestra-monitoring-manager
 # Commands
 all: build-collector
 
-build-go:
+build-go: setup
+	if 
 	@echo "Building binary..."
 	$(GOBUILD) $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) $(SRC_DIR)
 
-build-collector:
+build-collector: setup
 	@echo "Building collector..."
 	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml
 
@@ -63,6 +64,10 @@ clean:
 	@echo "Cleaning..."
 	$(GOCLEAN)
 	rm -f $(BUILD_DIR)/$(BINARY_NAME)
+
+setup:
+	@echo "Creating necessary dirs..."
+	mkdir -p $(BUILD_DIR)
 
 test: 
 	@echo "Running tests..."
