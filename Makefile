@@ -49,7 +49,7 @@ LDFLAGS=-ldflags "-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'ma
 BINARY_NAME ?= oakestra-monitoring-manager
 
 # Commands
-all: build-go
+all: build-collector
 
 build-go:
 	@echo "Building binary..."
