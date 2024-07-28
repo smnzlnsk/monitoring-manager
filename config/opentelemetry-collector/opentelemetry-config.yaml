@@ -12,6 +12,9 @@ exporters:
     endpoint: "0.0.0.0:8889"
 
 service:
+  telemetry:
+    metrics:
+      level: none
   pipelines:
     metrics:
       receivers: [otlp]
