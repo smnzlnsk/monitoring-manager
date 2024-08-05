@@ -10,7 +10,7 @@ exporters:
   debug:
     verbosity: detailed
   prometheus:
-    endpoint: "0.0.0.0:8889"
+    endpoint: "127.0.0.1:8889"
 
 service:
   telemetry:
