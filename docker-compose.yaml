@@ -1,15 +1,15 @@
 version: "3.8"
 
 services:
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
-    volumes:
-      - ./config/opentelemetry-collector/opentelemetry-config.yaml:/etc/otel-collector-config.yaml
-    command: ["--config", "/etc/otel-collector-config.yaml"]
-    ports:
-      - "4317:4317" # OTLP gRPC receiver
-      - "4318:4318" # OTLP HTTP receiver
-      - "8889:8889" # Prometheus exporter
+  #  otel-collector:
+  #  image: otel/opentelemetry-collector-contrib:latest
+  #  volumes:
+  #    - ./config/opentelemetry-collector/opentelemetry-config.yaml:/etc/otel-collector-config.yaml
+  #  command: ["--config", "/etc/otel-collector-config.yaml"]
+  #  ports:
+  #    - "4317:4317" # OTLP gRPC receiver
+  #    - "4318:4318" # OTLP HTTP receiver
+  #    - "8889:8889" # Prometheus exporter
 
   prometheus:
     image: prom/prometheus:latest
