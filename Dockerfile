@@ -13,17 +13,15 @@ COPY ./config/opentelemetry-collector-builder/manifest.yaml ./
 COPY internal/ ./internal
 COPY go.mod go.sum ./
 
-RUN go mod download
+RUN go mod download && \
+  go install go.opentelemetry.io/collector/cmd/builder@latest
 
-RUN go install go.opentelemetry.io/collector/cmd/builder@latest && \
-  builder --config=manifest.yaml --skip-strict-versioning
+RUN builder --config=manifest.yaml --skip-strict-versioning
 
 FROM alpine:latest
 
 WORKDIR /otel
 
 COPY --from=builder /app/build/manager .
-
-EXPOSE 8080
 
 ENTRYPOINT [ "./manager", "--config=opentelemetry-config.yaml"]
