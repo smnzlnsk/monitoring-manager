@@ -1,15 +1,17 @@
-version: "3.8"
-
 services:
-  #  otel-collector:
-  #  image: otel/opentelemetry-collector-contrib:latest
-  #  volumes:
-  #    - ./config/opentelemetry-collector/opentelemetry-config.yaml:/etc/otel-collector-config.yaml
-  #  command: ["--config", "/etc/otel-collector-config.yaml"]
-  #  ports:
-  #    - "4317:4317" # OTLP gRPC receiver
-  #    - "4318:4318" # OTLP HTTP receiver
-  #    - "8889:8889" # Prometheus exporter
+  manager:
+    image: monitoring-manager:latest
+    ports:
+      - "8889:8889" # Prometheus exporter
+    depends_on:
+      - mosquitto
+
+  agent:
+    image: monitoring-agent:latest
+    depends_on:
+      - mosquitto
+    ports:
+      - "8080:8888"
 
   prometheus:
     image: prom/prometheus:latest
@@ -20,13 +22,12 @@ services:
     ports:
       - "9090:9090" # Prometheus web UI
 
-
-  #  mosquitto:
-  #    image: eclipse-mosquitto:latest
-  #container_name: mosquitto
-  #ports:
-  #  - "1883:1883"
-  #- "9001:9001"
-  #volumes:
-  #  - ./config/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
-  #restart: unless-stopped
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./config/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    restart: unless-stopped
