@@ -1,22 +1,33 @@
 receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: "0.0.0.0:4317"
-      http:
-        endpoint: "0.0.0.0:4318"
+  mqttreceiver:
+    interval: 1s
+    broker:
+      host: mosquitto
+      port: 1883
 
 exporters:
   debug:
-    verbosity: detailed
+    verbosity: basic
   prometheus:
-    endpoint: "127.0.0.1:8889"
+    endpoint: "0.0.0.0:8889"
+    enable_open_metrics: true
+    #resource_to_telemetry_conversion:
+    #  enabled: true
+  backend:
+
+processors:
+  transform:
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(attributes["machine"], resource.attributes["machine"])
 
 service:
   telemetry:
     metrics:
-      level: none
+      level:
   pipelines:
     metrics:
-      receivers: [otlp]
-      exporters: [debug, prometheus]
+      receivers: [mqttreceiver]
+      processors: [transform]
+      exporters: [backend, debug, prometheus]
