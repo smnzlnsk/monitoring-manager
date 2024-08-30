@@ -6,5 +6,5 @@ import (
 
 var (
 	Type      = component.MustNewType("backend")
-	ScopeName = "github.com/smnzlnsk/monitoring-backend"
+	ScopeName = "github.com/smnzlnsk/monitoring-manager/exporters/backend"
 )

@@ -3,7 +3,7 @@ package backendexporter // import github.com/smnzlnsk/monitoringbackendexporter
 import (
 	"context"
 
-	"github.com/smnzlnsk/backend/internal/metadata"
+	"github.com/smnzlnsk/monitoring-manager/exporters/backend/internal/metadata"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"
