@@ -9,8 +9,13 @@ dist:
 receivers:
   - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.108.1
   - gomod: github.com/smnzlnsk/mqttreceiver v0.0.1
-    path: ./internal/mqttreceiver
+    path: ./receivers/mqtt
+
+processors:
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.108.0
 
 exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.108.1
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.108.0
+  - gomod: github.com/smnzlnsk/monitoringbackendexporter v0.0.1
+    path: ./exporters/backend
