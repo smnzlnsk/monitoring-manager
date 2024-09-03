@@ -124,4 +124,4 @@ mod-tidy:
 .PHONY: run
 run: build
 	@echo "Running collector..."
-	$(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
+	$(BUILD_DIR)/$(COLLECTOR_BIN) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
