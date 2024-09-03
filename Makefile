@@ -56,6 +56,7 @@ BINARY_NAME ?= oakestra-monitoring-manager
 # Docker
 DOCKER=docker
 CONTAINER_NAME=monitoring-manager
+MAKE=make
 
 # Commands
 all: help
@@ -71,20 +72,17 @@ help:
 	@echo "run \t\t\t run the collector in $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)"
 
 .PHONY: push
-push: build-export
-	@echo "Pushing bin and build to github..."
+push: manager
+	@echo "Pushing bin to github..."
 	@git add bin
-	@git add build
 	@git commit -m "Pushed build $(COMMIT) on $(DATE)"
 	@git push
 
-.PHONY: build-export
-build-export: build clean
-	@echo "(Re-)building project for export..."
+.PHONY: build-bin
+build-bin: build
 	@cp -r $(COLLECTOR_BUILD_DIR) $(BUILD_DIR)
 	@mkdir -p $(BINARY_DIR)
 	@mv $(BUILD_DIR)/$(COLLECTOR_BIN) $(BINARY_DIR)/$(COLLECTOR_BIN)
-	@echo "Done"
 
 .PHONY: build-docker
 build-docker:
@@ -122,6 +120,19 @@ mod-tidy:
 	$(GOMOD) tidy
 
 .PHONY: run
-run: build
+run: manager
 	@echo "Running collector..."
-	$(BUILD_DIR)/$(COLLECTOR_BIN) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
+	$(BINARY_DIR)/$(COLLECTOR_BIN) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
+
+.PHONY: manager
+manager: bin
+ifeq ($(wildcard $(BINARY_DIR)/$(COLLECTOR_BIN)),)
+	$(MAKE) build-bin
+endif
+
+.PHONY: bin
+bin:
+ifeq ($(wildcard $(BINARY_DIR)),)
+	mkdir -p $(BINARY_DIR)
+endif
+
