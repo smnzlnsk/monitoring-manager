@@ -23,16 +23,20 @@ ARCH := $(shell uname -m)
 
 ifeq ($(OS), Darwin)
 	ifeq ($(ARCH), arm64)
-		OSARCH=darwin-arm64
+		GOOS=darwin
+		GOARCH=arm64
 	endif
 endif
 
 ifeq ($(OS), Linux)
 	ifeq ($(ARCH), aarch64)
-		OSARCH=linux-aarch64
+		GOOS=linux
+		GOARCH=arm64
 	endif
 endif
 # default
+GOOS ?= unsupported
+GOARCH ?= unsupported
 OSARCH ?= unknown
 
 # OpenTelemetry Collector Builder
@@ -49,6 +53,7 @@ DATE=$(shell date +%Y-%m-%dT%H:%M:%SZ)
 
 # Go build flags
 LDFLAGS=-ldflags "-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'main.Date=$(DATE)'"
+BUILDER_LDFLAGS="-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'main.Date=$(DATE)'"
 
 # Variables
 BINARY_NAME ?= oakestra-monitoring-manager
@@ -71,7 +76,6 @@ help:
 	@echo "mod-tidy \t\t run go mod tidy"
 	@echo "run \t\t\t run the collector in $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)"
 
-.PHONY: push
 push: manager
 	@echo "Pushing bin to github..."
 	@git add bin
@@ -80,23 +84,30 @@ push: manager
 
 .PHONY: build-bin
 build-bin: build
-	@cp -r $(COLLECTOR_BUILD_DIR) $(BUILD_DIR)
 	@mkdir -p $(BINARY_DIR)
-	@mv $(BUILD_DIR)/$(COLLECTOR_BIN) $(BINARY_DIR)/$(COLLECTOR_BIN)
+	@cp -r $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)* $(BINARY_DIR)/
 
 .PHONY: build-docker
 build-docker:
   docker build --progress=plain -t monitoring-manager:latest .
 
+
 .PHONY: build
-build:
-	@echo "Building collector... "
-	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN) --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
+build: build-darwin build-linux
+
+
+.PHONY: build-darwin
+build-darwin:
+	@echo "Building collector for darwin... "
+	GOOS=linux GOARCH=arm64 $(OCB) --ldflags=$(BUILDER_LDFLAGS) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN)_linux_arm64 --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
+
+.PHONY: build-linux
+build-linux:
+	GOOS=linux GOARCH=arm64 $(OCB) --ldflags=$(BUILDER_LDFLAGS) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN)_darwin_arm64 --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
 
 .PHONY: clean
 clean:
 	@echo "Cleaning up..."
-	@rm -r $(BUILD_DIR)
 	@rm -r $(BINARY_DIR)
 
 .PHONY: test
@@ -126,13 +137,17 @@ run: manager
 
 .PHONY: manager
 manager: bin
-ifeq ($(wildcard $(BINARY_DIR)/$(COLLECTOR_BIN)),)
+ifeq ($(wildcard $(BINARY_DIR)/$(COLLECTOR_BIN)*),)
 	$(MAKE) build-bin
 endif
 
 .PHONY: bin
 bin:
 ifeq ($(wildcard $(BINARY_DIR)),)
-	mkdir -p $(BINARY_DIR)
+	@mkdir -p $(BINARY_DIR)
 endif
+
+.PHONY: dist
+dist: build-bin
+	scp -r ./* beta.pi:workspace/thesis/monitoring-manager
 
