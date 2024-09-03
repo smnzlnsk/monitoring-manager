@@ -11,7 +11,8 @@ PKG=./...
 
 # Directories
 SRC_DIR=./cmd/$(BINARY_NAME)
-BUILD_DIR=./bin
+BINARY_DIR=./bin
+BUILD_DIR=./build
 CONFIG_DIR=./config
 BUILDER_CONFIG_DIR=$(CONFIG_DIR)/opentelemetry-collector-builder
 SCRIPTS_DIR=./scripts
@@ -61,50 +62,66 @@ all: help
 
 help:
 	@echo "Available commands:"
-	@echo "build-docker \t build docker image"
-	@echo "build-collector \t build opentelemetry collector"
+	@echo "build-docker \t\t build docker image"
+	@echo "build \t\t\t build opentelemetry collector"
 	@echo "test \t\t\t run tests"
 	@echo "fmt \t\t\t run gofmt"
 	@echo "vet \t\t\t run go vet"
 	@echo "mod-tidy \t\t run go mod tidy"
-	@echo "run-collector \t\t run the collector in $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)"
+	@echo "run \t\t\t run the collector in $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)"
 
+.PHONY: push
+push: build-export
+	@echo "Pushing bin and build to github..."
+	@git add bin
+	@git add build
+	@git commit -m "Pushed build $(COMMIT) on $(DATE)"
+	@git push
+
+.PHONY: build-export
+build-export: build clean
+	@echo "(Re-)building project for export..."
+	@cp -r $(COLLECTOR_BUILD_DIR) $(BUILD_DIR)
+	@mkdir -p $(BINARY_DIR)
+	@mv $(BUILD_DIR)/$(COLLECTOR_BIN) $(BINARY_DIR)/$(COLLECTOR_BIN)
+	@echo "Done"
+
+.PHONY: build-docker
 build-docker:
   docker build --progress=plain -t monitoring-manager:latest .
 
-build-collector: setup
+.PHONY: build
+build:
 	@echo "Building collector... "
 	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN) --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
 
-clean: 
-	@echo "Cleaning..."
-	$(GOCLEAN)
-	rm -f $(BUILD_DIR)/$(BINARY_NAME)
+.PHONY: clean
+clean:
+	@echo "Cleaning up..."
+	@rm -r $(BUILD_DIR)
+	@rm -r $(BINARY_DIR)
 
-setup:
-	@echo "Creating necessary dirs..."
-	mkdir -p $(BUILD_DIR)
-
-test: 
+.PHONY: test
+test:
 	@echo "Running tests..."
 	$(GOTEST) -v $(PKG)
 
-fmt: 
+.PHONY: fmt
+fmt:
 	@echo "Formatting code..."
 	$(GOFMT) $(PKG)
 
-vet: 
+.PHONY: vet
+vet:
 	@echo "Vetting code..."
 	$(GOVET) $(PKG)
 
+.PHONY: mod-tidy
 mod-tidy: 
 	@echo "Tidying up modules..."
 	$(GOMOD) tidy
 
-run-collector: build-collector
+.PHONY: run
+run: build
 	@echo "Running collector..."
 	$(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
-
-# Phony targets
-.PHONY: all build-docker build-collector clean test fmt vet mod-tidy run-collector help
-
