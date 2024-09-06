@@ -2,6 +2,7 @@ package mqttreceiver // import github.com/smnzlnsk/mqttreceiver
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"github.com/smnzlnsk/monitoring-manager/receivers/mqtt/internal/metadata"
@@ -48,6 +49,11 @@ func createMetricsReceiver(
 ) (receiver.Metrics, error) {
 	logger := set.Logger
 	config := (cfg.(*Config))
+
+	if os.Getenv("AGENT_NAME") != "" {
+		config.ClientID = os.Getenv("AGENT_NAME")
+	}
+
 	mr, err := newMQTTReceiver(config, logger, con)
 	if err != nil {
 		return nil, err
