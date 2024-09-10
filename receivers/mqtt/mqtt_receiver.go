@@ -56,7 +56,7 @@ func newMQTTReceiver(cfg *Config, logger *zap.Logger, consumer consumer.Metrics)
 func (mr *mqttReceiver) Start(ctx context.Context, host component.Host) error {
 	ctx = context.Background()
 	ctx, mr.cancel = context.WithCancel(ctx)
-	marshaler, err := newMarshaler(mr.config.EncodingExtensionID, host)
+	marshaler, err := newMarshaler(mr.config.Encoding)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,10 @@ func (mr *mqttReceiver) handleMetrics(c mqtt.Client, m mqtt.Message) {
 		return
 	}
 	mr.logger.Debug("successfully unmarshaled message")
-	mr.ConsumeMetrics(context.Background(), data)
+	err = mr.ConsumeMetrics(context.Background(), data)
+	if err != nil {
+		mr.logger.Error("failed to consume metrics", zap.Error(err))
+	}
 }
 
 func (mr *mqttReceiver) RegisterTopic(topic string, handler mqtt.MessageHandler) {

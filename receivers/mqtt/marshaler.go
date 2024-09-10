@@ -1,9 +1,6 @@
 package mqttreceiver // import github.com/smnzlnsk/mqttreceiver
 
 import (
-	"fmt"
-
-	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
@@ -12,18 +9,17 @@ type marshaler struct {
 	metricsUnmarshaler pmetric.Unmarshaler
 }
 
-func newMarshaler(encoding *component.ID, host component.Host) (*marshaler, error) {
-	var metricsMarshaler pmetric.Marshaler = &pmetric.ProtoMarshaler{}
-	var metricsUnmarshaler pmetric.Unmarshaler = &pmetric.ProtoUnmarshaler{}
+func newMarshaler(encoding string) (*marshaler, error) {
+	var metricsMarshaler pmetric.Marshaler
+	var metricsUnmarshaler pmetric.Unmarshaler
 
-	if encoding != nil {
-		ext, ok := host.GetExtensions()[*encoding]
-		if !ok {
-			return nil, fmt.Errorf("unknown encoding %q", encoding)
-		}
-
-		metricsMarshaler, _ = ext.(pmetric.Marshaler)
-		metricsUnmarshaler, _ = ext.(pmetric.Unmarshaler)
+	switch encoding {
+	case "json":
+		metricsMarshaler = &pmetric.JSONMarshaler{}
+		metricsUnmarshaler = &pmetric.JSONUnmarshaler{}
+	case "proto":
+		metricsMarshaler = &pmetric.ProtoMarshaler{}
+		metricsUnmarshaler = &pmetric.ProtoUnmarshaler{}
 	}
 
 	m := marshaler{
