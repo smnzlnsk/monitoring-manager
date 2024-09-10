@@ -34,6 +34,7 @@ func newBackend(cfg *Config, logger *zap.Logger) (*backend, error) {
 func (b *backend) start(ctx context.Context, host component.Host) error {
 	ctx = context.Background()
 	ctx, b.cancel = context.WithCancel(ctx)
+	marshaler, err := newMarshaler()
 	if err != nil {
 		return err
 	}
