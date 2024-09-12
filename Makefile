@@ -91,10 +91,13 @@ build-bin: build
 build-docker:
   docker build --progress=plain -t monitoring-manager:latest .
 
-
 .PHONY: build
 build: build-darwin build-linux
 
+.PHONY: run-dev
+run-dev: clean build-darwin
+	@echo "Running collector..."
+	$(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)_$(GOOS)_$(GOARCH) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
 
 .PHONY: build-darwin
 build-darwin:
@@ -108,7 +111,7 @@ build-linux:
 .PHONY: clean
 clean:
 	@echo "Cleaning up..."
-	@rm -r $(BINARY_DIR)
+	@rm -rf $(BINARY_DIR)
 
 .PHONY: test
 test:
@@ -131,7 +134,7 @@ mod-tidy:
 	$(GOMOD) tidy
 
 .PHONY: run
-run: manager
+run: clean manager
 	@echo "Running collector..."
 	$(BINARY_DIR)/$(COLLECTOR_BIN)_$(GOOS)_$(GOARCH) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
 
