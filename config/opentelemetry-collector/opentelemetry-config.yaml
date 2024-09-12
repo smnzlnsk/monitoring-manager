@@ -1,10 +1,10 @@
 receivers:
-  mqttreceiver:
+  mqtt:
     interval: 1s
-    client_id: test_manager_mac
+    client_id: manager_receiver_mac
     broker:
-      host: mosquitto
-      port: 1883
+      host: &brokerhost localhost
+      port: &brokerport 1883
 
 exporters:
   debug:
@@ -14,7 +14,13 @@ exporters:
     enable_open_metrics: false
     #resource_to_telemetry_conversion:
     #  enabled: true
-  backend:
+  mqtt:
+    interval: 1s
+    client_id: manager_exporter_mac
+    topic: metrics/done
+    broker:
+      host: *brokerhost
+      port: *brokerport
 
 processors:
   transform:
@@ -29,6 +35,6 @@ service:
       level:
   pipelines:
     metrics:
-      receivers: [mqttreceiver]
+      receivers: [mqtt]
       processors: [transform]
-      exporters: [backend, prometheus]
+      exporters: [mqtt]
