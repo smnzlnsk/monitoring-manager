@@ -2,7 +2,7 @@
 
 FROM golang:1.23-alpine AS builder
 
-ENV GO111MODULE=on 
+ENV GO111MODULE=on
 ENV CGO_ENABLED=0
 
 RUN apk add --no-cache git make
@@ -10,8 +10,7 @@ RUN apk add --no-cache git make
 WORKDIR /app
 
 COPY ./config/opentelemetry-collector-builder/manifest.yaml ./
-COPY ./exporters ./exporters
-COPY ./receivers ./receivers
+COPY ./config/opentelemetry-collector/opentelemetry-config.yaml ./
 COPY go.mod go.sum ./
 
 RUN go mod download && \
@@ -24,5 +23,6 @@ FROM alpine:latest
 WORKDIR /otel
 
 COPY --from=builder /app/build/manager .
+COPY --from=builder /app/opentelemetry-config.yaml .
 
 ENTRYPOINT [ "./manager", "--config=opentelemetry-config.yaml"]
