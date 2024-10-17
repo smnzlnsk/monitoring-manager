@@ -1,26 +1,20 @@
 receivers:
   mqtt:
     interval: 1s
-    client_id: manager_receiver_mac
+    client_id: monitoring-manager
     broker:
-      host: &brokerhost localhost
-      port: &brokerport 1883
+      host: 127.0.0.1
+      port: 1883
 
 exporters:
   debug:
-    verbosity: basic
-  prometheus:
-    endpoint: "0.0.0.0:8889"
-    enable_open_metrics: false
-    #resource_to_telemetry_conversion:
-    #  enabled: true
-  mqtt:
-    interval: 1s
-    client_id: manager_exporter_mac
-    topic: metrics/done
-    broker:
-      host: *brokerhost
-      port: *brokerport
+    verbosity: normal
+
+  http:
+    endpoint:
+      # TODO: set to address of routing-manager
+      ip: 127.0.0.1
+      port: 1880
 
 processors:
   transform:
@@ -37,4 +31,4 @@ service:
     metrics:
       receivers: [mqtt]
       processors: [transform]
-      exporters: [mqtt]
+      exporters: [http, debug]
