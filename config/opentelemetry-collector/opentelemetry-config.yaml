@@ -7,6 +7,7 @@ receivers:
       port: 1883
 
 exporters:
+  
   debug:
     verbosity: normal
 
@@ -17,6 +18,10 @@ exporters:
       port: 1880
 
 processors:
+  oakestra:
+    subprocessors:
+      cpu:
+
   transform:
     metric_statements:
       - context: datapoint
@@ -30,5 +35,5 @@ service:
   pipelines:
     metrics:
       receivers: [mqtt]
-      processors: [transform]
-      exporters: [http, debug]
+      processors: [oakestra]
+      exporters: [http] #[http, debug]
