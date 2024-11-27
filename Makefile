@@ -61,7 +61,7 @@ dev:
 	$(OCB) --config=$(BUILDER_CONFIG_DIR)/dev-manifest.yaml --skip-strict-versioning
 
 .PHONY: run
-run:
+run: dev
 	$(BUILD_DIR)/$(BINARY_NAME) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
 
 .PHONY: build-remote
