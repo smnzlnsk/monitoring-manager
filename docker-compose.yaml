@@ -1,18 +1,4 @@
 services:
-  manager:
-    image: monitoring-manager:latest
-    ports:
-      - "8889:8889" # Prometheus exporter
-    depends_on:
-      - mosquitto
-
-  agent:
-    image: monitoring-agent:latest
-    depends_on:
-      - mosquitto
-    ports:
-      - "8080:8888"
-
   prometheus:
     image: prom/prometheus:latest
     volumes:
