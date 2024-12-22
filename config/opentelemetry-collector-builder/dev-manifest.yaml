@@ -12,6 +12,7 @@ receivers:
 
 processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.109.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbyattrsprocessor v0.109.0
   - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraprocessor v0.0.0
     path: processors/oakestraprocessor
   #  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/heuristicprocessor v0.0.0

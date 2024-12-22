@@ -18,9 +18,12 @@ exporters:
       port: 1880
 
 processors:
+  groupbyattrs:
+
   oakestra:
     subprocessors:
       cpu:
+      memory:
 
   transform:
     metric_statements:
@@ -35,5 +38,5 @@ service:
   pipelines:
     metrics:
       receivers: [mqtt]
-      processors: [oakestra]
+      processors: [oakestra, groupbyattrs]
       exporters: [http] #[http, debug]
