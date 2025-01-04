@@ -24,7 +24,8 @@ processors:
     subprocessors:
       cpu:
       memory:
-
+    grpc_port: 5568
+    
   transform:
     metric_statements:
       - context: datapoint
