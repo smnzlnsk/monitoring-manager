@@ -62,7 +62,7 @@ dev:
 
 .PHONY: run
 run: dev
-	$(BUILD_DIR)/$(BINARY_NAME) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
+	$(BUILD_DIR)/$(BINARY_NAME) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config-dev.yaml
 
 .PHONY: build-remote
 build-remote:

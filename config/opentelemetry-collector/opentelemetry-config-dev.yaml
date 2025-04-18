@@ -3,13 +3,13 @@ receivers:
     interval: 1s
     client_id: monitoring-manager
     broker:
-      host: ${MQTT_BROKER_HOST}
-      port: ${MQTT_BROKER_PORT}
+      host: 131.159.24.1
+      port: 10003
 
 exporters:
   
   debug:
-    verbosity: basic
+    verbosity: detailed
 
 processors:
   groupbyattrs:
@@ -18,25 +18,25 @@ processors:
     http_server:
       enabled: true
       host: 0.0.0.0
-      port: ${HTTP_PORT}
+      port: 8081
     mongodb:
-      host: ${MONGODB_HOST}
-      port: ${MONGODB_PORT}
-      username: ${MONGODB_USERNAME}
-      password: ${MONGODB_PASSWORD}
+      host: 131.159.24.1
+      port: 10108
+      username: 
+      password: 
   
   oakestra:
     subprocessors:
       cpu:
       memory:
       application:
-    grpc_port: ${GRPC_PORT}
+    grpc_port: 5568
     mongodb:
-      host: ${MONGODB_HOST}
-      port: ${MONGODB_PORT}
-      username: ${MONGODB_USERNAME}
-      password: ${MONGODB_PASSWORD}
-      
+      host: 131.159.24.1
+      port: 10108
+      username: 
+      password: 
+    
   transform:
     metric_statements:
       - context: datapoint

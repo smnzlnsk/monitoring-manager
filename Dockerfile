@@ -9,12 +9,15 @@ RUN apk add --no-cache git make
 
 WORKDIR /app
 
+RUN go install go.opentelemetry.io/collector/cmd/builder@v0.109.0
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
 COPY . .
 
-RUN go mod download && \
-  go install go.opentelemetry.io/collector/cmd/builder@v0.109.0
-
-RUN builder --config=config/opentelemetry-collector-builder/dev-manifest.yaml --skip-strict-versioning
+RUN builder --config=config/opentelemetry-collector-builder/remote-manifest.yaml --skip-strict-versioning
 
 FROM alpine:latest
 
@@ -23,4 +26,8 @@ WORKDIR /otel
 COPY --from=builder /app/build/monitoringmanager .
 COPY --from=builder /app/config/opentelemetry-collector/opentelemetry-config.yaml .
 
-ENTRYPOINT [ "./monitoringmanager", "--config=opentelemetry-config.yaml"]
+# Make the binary executable
+RUN chmod +x /otel/monitoringmanager
+
+# Use the standard OpenTelemetry collector command format
+ENTRYPOINT ["/otel/monitoringmanager", "--config=/otel/opentelemetry-config.yaml"]
