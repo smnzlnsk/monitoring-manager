@@ -1,0 +1,22 @@
+services:
+  monitoring-manager:
+    image: monitoring-manager:latest
+    container_name: monitoring-manager
+    hostname: monitoring-manager
+    restart: unless-stopped
+    ports:
+      # gRPC port for the Oakestra processor
+      - "${MONITORING_MANAGER_GRPC_PORT}:${MONITORING_MANAGER_GRPC_PORT}"
+      # HTTP server port for the heuristic engine
+      - "${MONITORING_MANAGER_HTTP_PORT}:${MONITORING_MANAGER_HTTP_PORT}"
+    environment:
+      # Add any environment variables if needed
+      - DEBUG=false
+      - HTTP_PORT=${MONITORING_MANAGER_HTTP_PORT}
+      - GRPC_PORT=${MONITORING_MANAGER_GRPC_PORT}
+      - MQTT_BROKER_HOST=${MQTT_BROKER_URL}
+      - MQTT_BROKER_PORT=${MQTT_BROKER_PORT}
+      - MONGODB_HOST=${MONGODB_NET_URL}
+      - MONGODB_PORT=${MONGODB_NET_PORT}
+      - MONGODB_USERNAME=${MONGODB_USERNAME}
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
