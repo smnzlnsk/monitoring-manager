@@ -9,7 +9,7 @@ receivers:
 exporters:
   
   debug:
-    verbosity: detailed
+    verbosity: normal
 
 processors:
   groupbyattrs:
@@ -24,7 +24,10 @@ processors:
       port: 10108
       username: 
       password: 
-  
+    service_manager:
+      host: 131.159.24.1
+      port: 10110
+
   oakestra:
     subprocessors:
       cpu:
