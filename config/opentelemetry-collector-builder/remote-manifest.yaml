@@ -2,18 +2,18 @@ dist:
   # module: github.com/smnzlnsk/monitoring-manager
   description: Master Thesis - Telemetry driven Network Optimisation in Edge-Cloud Orchestration Frameworks
   otelcol_version: 0.109.0
-  version: 0.0.1
+  version: 0.1.0
   output_path: /app/build
   name: monitoringmanager
 
 receivers:
-  - gomod: github.com/smnzlnsk/opentelemetry-components/receiver/mqttreceiver v0.0.1
+  - gomod: github.com/smnzlnsk/opentelemetry-components/receiver/mqttreceiver v0.1.0
 
 processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.109.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbyattrsprocessor v0.109.0
-  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraprocessor v0.0.0
-  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraheuristicengine v0.0.0
+  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraprocessor v0.1.0
+  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraheuristicengine v0.0.5
 
 exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.109.0
