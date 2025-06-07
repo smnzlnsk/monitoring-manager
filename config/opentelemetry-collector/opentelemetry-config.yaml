@@ -24,6 +24,9 @@ processors:
       port: ${MONGODB_PORT}
       username: ${MONGODB_USERNAME}
       password: ${MONGODB_PASSWORD}
+    service_manager:
+      host: ${SERVICE_MANAGER_HOST}
+      port: ${SERVICE_MANAGER_PORT}
   
   oakestra:
     subprocessors:
