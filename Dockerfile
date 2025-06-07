@@ -23,6 +23,8 @@ FROM alpine:latest
 
 WORKDIR /otel
 
+RUN apk add --no-cache make curl grep bash
+
 COPY --from=builder /app/build/monitoringmanager .
 COPY --from=builder /app/config/opentelemetry-collector/opentelemetry-config.yaml .
 
