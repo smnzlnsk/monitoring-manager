@@ -46,7 +46,12 @@ processors:
         statements:
           - set(attributes["machine"], resource.attributes["machine"])
 
+extensions:
+  pprof:
+    endpoint: 0.0.0.0:1777
+
 service:
+  extensions: [pprof]
   telemetry:
     metrics:
       level:

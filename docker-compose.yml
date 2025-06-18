@@ -4,11 +4,15 @@ services:
     container_name: monitoring-manager
     hostname: monitoring-manager
     restart: unless-stopped
+    volumes:
+      - /home/ubuntu/benchmarks/monitoring:/bench
+      - ./monitoring-manager/config/opentelemetry-collector/opentelemetry-config.yaml:/otel/opentelemetry-config.yaml
     ports:
       # gRPC port for the Oakestra processor
       - "${MONITORING_MANAGER_GRPC_PORT}:${MONITORING_MANAGER_GRPC_PORT}"
       # HTTP server port for the heuristic engine
       - "${MONITORING_MANAGER_HTTP_PORT}:${MONITORING_MANAGER_HTTP_PORT}"
+      - "1777:1777"
     environment:
       # Add any environment variables if needed
       - DEBUG=false

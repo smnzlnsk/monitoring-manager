@@ -23,3 +23,5 @@ exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.109.0
   - gomod: github.com/smnzlnsk/opentelemetry-components/exporter/httpexporter v0.0.0
     path: exporters/httpexporter
+extensions:
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/pprofextension v0.109.0

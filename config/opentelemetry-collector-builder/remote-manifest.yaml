@@ -17,3 +17,6 @@ processors:
 
 exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.109.0
+
+extensions:
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/pprofextension v0.109.0
