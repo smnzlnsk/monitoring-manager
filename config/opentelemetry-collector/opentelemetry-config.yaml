@@ -7,7 +7,7 @@ receivers:
       port: ${MQTT_BROKER_PORT}
 
 exporters:
-  
+  nop:
   debug:
     verbosity: basic
 
