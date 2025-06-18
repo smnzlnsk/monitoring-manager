@@ -12,11 +12,12 @@ receivers:
 processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.109.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbyattrsprocessor v0.109.0
-  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraprocessor v0.1.0
-  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraheuristicengine v0.0.5
+  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraprocessor v0.0.1-rc5
+  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraheuristicengine v0.0.6-rc5
 
 exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.109.0
+  - gomod: go.opentelemetry.io/collector/exporter/nopexporter v0.109.0
 
 extensions:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/pprofextension v0.109.0

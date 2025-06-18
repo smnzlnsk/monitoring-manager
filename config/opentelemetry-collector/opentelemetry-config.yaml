@@ -54,9 +54,10 @@ service:
   extensions: [pprof]
   telemetry:
     metrics:
-      level:
+      #level: detailed
+      #address: 0.0.0.0:55682
   pipelines:
     metrics:
       receivers: [mqtt]
       processors: [oakestra, heuristicengine, groupbyattrs]
-      exporters: [debug] #[http, debug]
+      exporters: [nop] #[http, debug]
