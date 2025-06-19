@@ -13,7 +13,7 @@ processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/transformprocessor v0.109.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbyattrsprocessor v0.109.0
   - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraprocessor v0.0.1-rc5
-  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraheuristicengine v0.0.6-rc5
+  - gomod: github.com/smnzlnsk/opentelemetry-components/processor/oakestraheuristicengine v0.0.6-rc7
 
 exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.109.0
